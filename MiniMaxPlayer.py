@@ -94,7 +94,7 @@ class MiniMaxPlayer(Player):
             opponent.play(action, is_evaluating=True)
             
             if opponent.is_winner():
-                self.undo_last_action()
+                opponent.undo_last_action()
                 action_value = -self.INFINITY
                 return action_value, action
             elif len(self.actions_logs) + len(opponent.actions_logs) >= self.MAX_DEPTH:
