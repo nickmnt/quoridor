@@ -117,6 +117,7 @@ class AlphaBetaPlayer(Player):
         # boxing strategy
         x1, y1 = self.get_position()
         x2, y2 = opponent.get_position()
-        distance = abs(y2-y1) + abs(x2-x1)
-        size = self.board.ROWS_NUM*self.board.COLS_NUM
-        return (1.1*opponent_distance - self_distance + 0.5*self.walls_count*(y2)/self.board.COLS_NUM)
+
+        return ((1+y2/self.board.ROWS_NUM*2)*opponent_distance - 2*self_distance
+            + 0.5*self.walls_count*(self.board.ROWS_NUM-y2)/self.board.ROWS_NUM
+            - opponent.walls_count*(y1)/self.board.ROWS_NUM)

@@ -49,12 +49,18 @@ class MiniMaxPlayer(Player):
 
         return self_distance, opponent_distance
 
-    def evaluate(self, opponent):
+    def evaluate(self, opponent: Player):
         self_distance, opponent_distance = self.bfs(opponent)
-        total_score = (5 * opponent_distance - self_distance) * (
-            1 + self.walls_count / 2
-        )
-        return total_score
+        # total_score = (5 * opponent_distance - self_distance) * (
+        #     1 + self.walls_count / 2
+        # )
+        # return total_score
+        # boxing strategy
+        x1, y1 = self.get_position()
+        x2, y2 = opponent.get_position()
+        distance = abs(y2-y1) + abs(x2-x1)
+        size = self.board.ROWS_NUM*self.board.COLS_NUM
+        return (1.1*opponent_distance - self_distance + 0.5*self.walls_count*(y2)/self.board.COLS_NUM)
 
     def get_best_action(self, opponent):
         val, action = self.max(opponent)

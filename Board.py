@@ -114,6 +114,61 @@ class Board:
 
         return True
 
+    def __hash__(self) -> str:
+        result = ""
+        for y in range(self.ROWS_NUM):
+            for x in range(self.COLS_NUM):
+                if x == 0:
+                    result.join('v')
+
+                piece = self.get_piece(x, y)
+
+                if piece.state == "empty":
+                    result.join('s')
+                elif piece.state == "white":
+                    result.join('w')
+                else:
+                    result.join('b')
+
+                if piece.r_side == "block":
+                    result.join('v')
+                else:
+                    result.join(' ')
+
+            result.join('n')
+
+            if y != self.ROWS_NUM - 1:
+                result.join('v')
+                for x in range(self.COLS_NUM):
+                    piece = self.get_piece(x, y)
+                    if piece.d_side == "block":
+                        end_char = (
+                            'h'
+                            if self.get_piece(x + 1, y).d_side == "block"
+                            else " "
+                        )
+                        result.join('h')
+                        result.join(end_char)
+                    # elif self.get_piece(x - 1, y).d_side == "block":
+                    #     print(HORIZONTAL_WALL, end=" ")
+                    else:
+                        result.join(' ')
+                    if (
+                        piece.r_side == "block"
+                        and self.get_piece(x, y + 1).r_side == "block"
+                    ):
+                        result.join('v')
+                    elif (
+                        piece.d_side == "block"
+                        and self.get_piece(x + 1, y).d_side == "block"
+                    ):
+                        result.join('h')
+                        result.join('h')
+                    else:
+                        result.join(' ')
+                result.join('n')
+
+
     def print_map(self):
         VERTICAL_WALL = "\u2503"
         HORIZONTAL_WALL = "\u2501"
