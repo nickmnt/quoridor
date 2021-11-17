@@ -3,60 +3,67 @@ from Player import Player
 from copy import deepcopy
 
 class AlphaBetaPlayer(Player): 
-    INFINITY = 9999
-    MAX_DEPTH = 2
+    MAX_DEPTH = 1
+    INFINITY = float('inf')
 
     def alpha_beta_search(self, opponent: Player):
-        v = self.max_value(opponent, float('-inf'), float('inf'))
-        return self.last_action
+        v, action = self.max_value(opponent, -self.INFINITY, self.INFINITY)
+        return action
 
-    def terminal_test(self, opponent: Player):
-        if self.is_winner() or opponent.is_winner():
-            return True
+    def min_value(self, opponent: "AlphaBetaPlayer", alpha, beta):
+        v = self.INFINITY
+        best_action = None
 
-        return False
+        for action in opponent.get_legal_actions(self):
+            opponent.play(action, is_evaluating=True)
 
-    def utility(self, opponent: Player):
-        if self.is_winner():
-            return 1
-        elif opponent.is_winner():
-            return -1
+            if opponent.is_winner():
+                opponent.undo_last_action()
+                action_value = -self.INFINITY
+                return action_value, action
+            elif len(self.actions_logs) + len(opponent.actions_logs) >= self.MAX_DEPTH:
+                action_value = self.evaluate(opponent)
+            else:
+                value, result_child = self.max_value(opponent, alpha, beta)
+                action_value = value
+            
+            if action_value < v:
+                v = action_value
+                best_action = action
 
-    def min_value(self, opponent: Player, alpha, beta):
-        if len(self.actions_logs) + len(opponent.actions_logs) > self.MAX_DEPTH:
-            return opponent.evaluate(self)
-        if self.terminal_test(opponent):
-            return opponent.evaluate(self)
-
-        v = float('inf')
-        for a in opponent.get_legal_actions(self):
-            opponent.play(a, is_evaluating=True)
-            v = min(v, self.max_value(opponent, alpha, beta))
             opponent.undo_last_action()
             if v <= alpha:
-                return v
+                return v, best_action
             beta = min(beta, v)
-        return v
+        return v,best_action
         
 
     def max_value(self, opponent: Player, alpha, beta):
-        if len(self.actions_logs) + len(opponent.actions_logs) > self.MAX_DEPTH:
-            return self.evaluate(opponent)
-        if self.terminal_test(opponent):
-            return self.evaluate(opponent)
+        v = -self.INFINITY
+        best_action = None
 
-        v = float('-inf')
-        for a in self.get_legal_actions(opponent):
-            self.play(a, is_evaluating=True)
-            result = self.min_value(opponent, alpha, beta)
-            if result > v:
-                v = result
-                self.last_action = a
+        for action in self.get_legal_actions(opponent):
+            self.play(action, is_evaluating=True)
+
+            if self.is_winner():
+                self.undo_last_action()
+                action_value = self.INFINITY
+                return action_value, action
+            elif len(self.actions_logs) + len(opponent.actions_logs) >= self.MAX_DEPTH:
+                action_value = self.evaluate(opponent)
+            else:
+                value, result_child = self.min_value(opponent, alpha, beta)
+                action_value = value
+                
+            if action_value > v:
+                v = action_value
+                best_action = action
+
             self.undo_last_action()
             if v >= beta:
-                return v
+                return v, best_action
             alpha = max(alpha, v)
-        return v
+        return v, best_action
 
     def bfs(self, opponent: Player):
         for player in [self, opponent]:

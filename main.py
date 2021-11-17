@@ -42,39 +42,39 @@ def play_default():
     print(f"walls count {walls_count}")
 
 if __name__ == "__main__":
-    play_default()
-    # board = Board()
+    # play_default()
+    board = Board()
 
-    # white_player = AlphaBetaPlayer("white", 4, 8, board)
-    # black_player = AlphaBetaPlayer("black", 4, 0, board)
+    white_player = AlphaBetaPlayer("white", 4, 8, board)
+    black_player = AlphaBetaPlayer("black", 4, 0, board)
 
-    # walls_count = 0
+    walls_count = 0
 
-    # while True:
-    #     action = white_player.alpha_beta_search(opponent=black_player)
-    #     white_player.play(action)
-    #     board.print_map()
-    #     print(
-    #         f"white: {action}, evaluation: {white_player.evaluate(opponent=black_player):.2f}, left walls: {white_player.walls_count}"
-    #     )
-    #     if white_player.is_winner():
-    #         print(f"White player just won with {white_player.moves_count} moves!")
-    #         break
-    #     if action.split("#")[0] == "wall":
-    #         walls_count += 1
-    #     sleep(0.3)
-    #     action = black_player.alpha_beta_search(opponent=white_player)
-    #     black_player.play(action)
-    #     board.print_map()
-    #     print(
-    #         f"black: {action}, evaluation: {black_player.evaluate(opponent=white_player):.2f}, left walls: {black_player.walls_count}"
-    #     )
-    #     if black_player.is_winner():
-    #         print(f"Black player just won with {black_player.moves_count} moves!")
-    #         break
+    while True:
+        action = white_player.alpha_beta_search(opponent=black_player)
+        white_player.play(action)
+        board.print_map()
+        print(
+            f"white: {action}, evaluation: {white_player.evaluate(opponent=black_player):.2f}, left walls: {white_player.walls_count}"
+        )
+        if white_player.is_winner():
+            print(f"White player just won with {white_player.moves_count} moves!")
+            break
+        if action.split("#")[0] == "wall":
+            walls_count += 1
+        sleep(0.3)
+        action = black_player.alpha_beta_search(opponent=white_player)
+        black_player.play(action)
+        board.print_map()
+        print(
+            f"black: {action}, evaluation: {black_player.evaluate(opponent=white_player):.2f}, left walls: {black_player.walls_count}"
+        )
+        if black_player.is_winner():
+            print(f"Black player just won with {black_player.moves_count} moves!")
+            break
 
-    #     if action.split("#")[0] == "wall":
-    #         walls_count += 1
-    #     sleep(0.3)
-    # print(f"walls count {walls_count}")
+        if action.split("#")[0] == "wall":
+            walls_count += 1
+        sleep(0.3)
+    print(f"walls count {walls_count}")
 
