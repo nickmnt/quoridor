@@ -114,7 +114,7 @@ class Board:
 
         return True
 
-    def __hash__(self) -> str:
+    def to_string(self) -> str:
         result = ""
         for y in range(self.ROWS_NUM):
             for x in range(self.COLS_NUM):

@@ -1,4 +1,5 @@
 from AlphaBetaSearch import AlphaBetaPlayer
+from EnhancedAbPlayer import EnhancedAbPlayer
 from MiniMaxPlayer import MiniMaxPlayer
 from MiniMaxPlayer import MiniMaxPlayer
 from Board import Board
@@ -14,6 +15,7 @@ def play_default():
     walls_count = 0
 
     while True:
+        #  play_default()
         action = white_player.get_best_action(opponent=black_player)
         white_player.play(action)
         board.print_map()
@@ -45,12 +47,13 @@ if __name__ == "__main__":
     # play_default()
     board = Board()
 
-    white_player = AlphaBetaPlayer("white", 4, 8, board)
-    black_player = AlphaBetaPlayer("black", 4, 0, board)
+    white_player = EnhancedAbPlayer("white", 4, 8, board)
+    black_player = EnhancedAbPlayer("black", 4, 0, board)
 
     walls_count = 0
 
     while True:
+        #  play_default()
         action = white_player.alpha_beta_search(opponent=black_player)
         white_player.play(action)
         board.print_map()
@@ -62,7 +65,7 @@ if __name__ == "__main__":
             break
         if action.split("#")[0] == "wall":
             walls_count += 1
-        sleep(0.3)
+        #sleep(0.3)
         action = black_player.alpha_beta_search(opponent=white_player)
         black_player.play(action)
         board.print_map()
@@ -75,6 +78,6 @@ if __name__ == "__main__":
 
         if action.split("#")[0] == "wall":
             walls_count += 1
-        sleep(0.3)
+        #sleep(0.3)
     print(f"walls count {walls_count}")
 
